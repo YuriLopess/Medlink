@@ -22,7 +22,7 @@
 
         public Task Delete(DoctorEntity entitie)
         {
-            string query = @"DELETE FROM public.DoctorEntity
+            string query = @"DELETE FROM public.doctor
             	WHERE id = @Id;";
 
             _dbContext.Connection.Execute(sql: query, param: entitie);
@@ -33,7 +33,7 @@
         public async Task<DoctorEntity?> Get(Guid idEntitie)
         {
             string query = @"SELECT id, name, email, specialty, crm
-	            FROM public.DoctorEntity
+	            FROM public.doctor
                 WHERE id = @Id;";
 
             var result = await _dbContext.Connection.QueryFirstOrDefaultAsync<DoctorEntity>(query, new { Id = idEntitie });
@@ -44,7 +44,7 @@
         public async Task<List<DoctorEntity>> GetAll()
         {
             string query = @"SELECT id, name, email, specialty, crm
-	            FROM public.DoctorEntity;";
+	            FROM public.doctor;";
 
             var result = await _dbContext.Connection.QueryAsync<DoctorEntity>(query);
 
@@ -53,7 +53,7 @@
 
         public Task Update(DoctorEntity entitie)
         {
-            string query = @"UPDATE public.DoctorEntity
+            string query = @"UPDATE public.doctor
 	            SET id=@Id, name=@Name, email=@Email, specialty=@Specialty, crm=@Crm
 	            WHERE id = @Id;";
 

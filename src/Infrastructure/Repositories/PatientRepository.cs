@@ -41,7 +41,7 @@
         public async Task<List<PatientEntity>> GetAll()
         {
             string query = @"SELECT id, name, email, cpf, bithdate
-	            FROM public.PatientEntiy;";
+	            FROM public.patient;";
 
             var result = await _dbContext.Connection.QueryAsync<PatientEntity>(query);
 
@@ -50,7 +50,7 @@
 
         public Task Update(PatientEntity entitie)
         {
-            string query = @"UPDATE public.PatientEntity
+            string query = @"UPDATE public.patient
 	            SET id=@Id, name=@Name, email=@Email, cpf=@Cpf, bithdate=@Bithdate
 	            WHERE id = @Id;";
 

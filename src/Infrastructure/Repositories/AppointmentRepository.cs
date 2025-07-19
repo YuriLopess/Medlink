@@ -12,7 +12,7 @@
         public Task Add(AppointmentEntity entitie)
         {
             string query = @"INSERT INTO public.appointment(
-                id, title, datetime, status, DoctorEntityid, PatientEntityid, createddate)
+                id, title, datetime, status, Doctorid, Patientid, createddate)
                 VALUES (@Id, @Title, @DateTime, @Status, @DoctorEntityId, @PatientEntityId, @CreatedDate);";
 
             _dbContext.Connection.Execute(sql: query, param: entitie);
@@ -22,7 +22,7 @@
 
         public Task Delete(AppointmentEntity entitie)
         {
-            string query = @"DELETE FROM public.AppointmentEntity
+            string query = @"DELETE FROM public.appointment
 	            WHERE id = @Id;";
 
             _dbContext.Connection.Execute(sql: query, param: entitie);
@@ -32,8 +32,8 @@
 
         public async Task<AppointmentEntity?> Get(Guid idEntitie)
         {
-            string query = @"SELECT id, title, datetime, status, DoctorEntityid, PatientEntityid, createddate
-                     FROM public.AppointmentEntity
+            string query = @"SELECT id, title, datetime, status, doctorid, patientid, createddate
+                     FROM public.appointment
                      WHERE id = @Id;";
 
             var result = await _dbContext.Connection.QueryFirstOrDefaultAsync<AppointmentEntity>(query, new { Id = idEntitie });
@@ -43,8 +43,8 @@
 
         public async Task<List<AppointmentEntity>> GetAll()
         {
-            string query = @"SELECT id, title, datetime, status, DoctorEntityid, PatientEntityid, createddate
-                     FROM public.AppointmentEntity;";
+            string query = @"SELECT id, title, datetime, status, doctorid, patientid, createddate
+                     FROM public.appointment;";
 
             var result = await _dbContext.Connection.QueryAsync<AppointmentEntity>(query);
 
@@ -53,8 +53,8 @@
 
         public Task Update(AppointmentEntity entitie)
         {
-            string query = @"UPDATE public.AppointmentEntity
-	            SET id=@Id, title=@Title, datetime=@DateTime, status=@Status, DoctorEntityid=@DoctorEntityId, PatientEntityid=@PatientEntityId, createddate=@CreatedDate
+            string query = @"UPDATE public.appointment
+	            SET id=@Id, title=@Title, datetime=@DateTime, status=@Status, doctorid=@DoctorId, PatientEntityid=@PatientId, createddate=@CreatedDate
 	            WHERE id = @Id;";
 
             _dbContext.Connection.Execute(sql: query, param: entitie);
