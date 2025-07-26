@@ -4,9 +4,9 @@
     {
         public DomainMapper()
         {
-            CreateMap<AppointmentEntity, AppointmentDto>();
-            CreateMap<DoctorEntity, DoctorDto>();
-            CreateMap<PatientEntity, PatientDto>();
+            CreateMap<AppointmentEntity, AppointmentDto>().ReverseMap();
+            CreateMap<DoctorEntity, DoctorDto>().ReverseMap();
+            CreateMap<PatientEntity, PatientDto>().ReverseMap();
         }
     }
 }

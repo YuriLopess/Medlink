@@ -1,6 +1,6 @@
 ﻿namespace Infrastructure.Repositories
 {
-    public class AppointmentRepository : IRepository<AppointmentEntity>
+    public class AppointmentRepository : IRepository<AppointmentDto>
     {
         private readonly AppDbContext _dbContext;
 
@@ -9,7 +9,7 @@
             _dbContext = appDbContext;
         }
 
-        public Task Add(AppointmentEntity entitie)
+        public Task Add(AppointmentDto entitie)
         {
             string query = @"INSERT INTO public.appointment(
                 id, title, datetime, status, Doctorid, Patientid, createddate)
@@ -20,7 +20,7 @@
             return Task.CompletedTask;
         }
 
-        public Task Delete(AppointmentEntity entitie)
+        public Task Delete(AppointmentDto entitie)
         {
             string query = @"DELETE FROM public.appointment
 	            WHERE id = @Id;";
@@ -30,28 +30,28 @@
             return Task.CompletedTask;
         }
 
-        public async Task<AppointmentEntity?> Get(Guid idEntitie)
+        public async Task<AppointmentDto?> Get(Guid idEntitie)
         {
             string query = @"SELECT id, title, datetime, status, doctorid, patientid, createddate
                      FROM public.appointment
                      WHERE id = @Id;";
 
-            var result = await _dbContext.Connection.QueryFirstOrDefaultAsync<AppointmentEntity>(query, new { Id = idEntitie });
+            var result = await _dbContext.Connection.QueryFirstOrDefaultAsync<AppointmentDto>(query, new { Id = idEntitie });
 
             return result;
         }
 
-        public async Task<List<AppointmentEntity>> GetAll()
+        public async Task<List<AppointmentDto>> GetAll()
         {
             string query = @"SELECT id, title, datetime, status, doctorid, patientid, createddate
                      FROM public.appointment;";
 
-            var result = await _dbContext.Connection.QueryAsync<AppointmentEntity>(query);
+            var result = await _dbContext.Connection.QueryAsync<AppointmentDto>(query);
 
             return result.ToList();
         }
 
-        public Task Update(AppointmentEntity entitie)
+        public Task Update(AppointmentDto entitie)
         {
             string query = @"UPDATE public.appointment
 	            SET id=@Id, title=@Title, datetime=@DateTime, status=@Status, doctorid=@DoctorId, PatientEntityid=@PatientId, createddate=@CreatedDate

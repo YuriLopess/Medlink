@@ -1,6 +1,6 @@
 ﻿namespace MedLink.Infrastructure.Repositories
 {
-    public class DoctorRepository : IRepository<DoctorEntity>
+    public class DoctorRepository : IRepository<DoctorDto>
     {
         private readonly AppDbContext _dbContext;
 
@@ -9,7 +9,7 @@
             _dbContext = dbContext;
         }
 
-        public Task Add(DoctorEntity entitie)
+        public Task Add(DoctorDto entitie)
         {
             string query = @"INSERT INTO public.doctor(
 	            id, name, email, specialty, crm)
@@ -20,7 +20,7 @@
             return Task.CompletedTask;
         }
 
-        public Task Delete(DoctorEntity entitie)
+        public Task Delete(DoctorDto entitie)
         {
             string query = @"DELETE FROM public.doctor
             	WHERE id = @Id;";
@@ -30,28 +30,28 @@
             return Task.CompletedTask;
         }
 
-        public async Task<DoctorEntity?> Get(Guid idEntitie)
+        public async Task<DoctorDto?> Get(Guid idEntitie)
         {
             string query = @"SELECT id, name, email, specialty, crm
 	            FROM public.doctor
                 WHERE id = @Id;";
 
-            var result = await _dbContext.Connection.QueryFirstOrDefaultAsync<DoctorEntity>(query, new { Id = idEntitie });
+            var result = await _dbContext.Connection.QueryFirstOrDefaultAsync<DoctorDto>(query, new { Id = idEntitie });
 
             return result;
         }
 
-        public async Task<List<DoctorEntity>> GetAll()
+        public async Task<List<DoctorDto>> GetAll()
         {
             string query = @"SELECT id, name, email, specialty, crm
 	            FROM public.doctor;";
 
-            var result = await _dbContext.Connection.QueryAsync<DoctorEntity>(query);
+            var result = await _dbContext.Connection.QueryAsync<DoctorDto>(query);
 
             return result.ToList();
         }
 
-        public Task Update(DoctorEntity entitie)
+        public Task Update(DoctorDto entitie)
         {
             string query = @"UPDATE public.doctor
 	            SET id=@Id, name=@Name, email=@Email, specialty=@Specialty, crm=@Crm
