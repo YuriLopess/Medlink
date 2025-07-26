@@ -1,4 +1,5 @@
 ﻿namespace MedLink.Infrastructure.Repositories
+
 {
     public class PatientRepository : IRepository<PatientEntity>
     {
