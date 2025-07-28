@@ -1,6 +1,8 @@
-﻿namespace MedLink.Infrastructure.Repositories
+﻿using Domain.Entities;
+
+namespace MedLink.Infrastructure.Repositories
 {
-    public class DoctorRepository : IRepository<DoctorDto>
+    public class DoctorRepository : IRepository<DoctorEntity>
     {
         private readonly AppDbContext _dbContext;
 
@@ -9,55 +11,59 @@
             _dbContext = dbContext;
         }
 
-        public Task Add(DoctorDto entitie)
+        public Task Add(DoctorEntity entity)
         {
-            string query = @"INSERT INTO public.doctor(
-	            id, name, email, specialty, crm)
-	            VALUES (@Id, @Name, @Email, @Specialty, @Crm);";
+            const string query = @"
+                INSERT INTO public.doctor(
+                    id, name, email, specialty, crm)
+                VALUES (@Id, @Name, @Email, @Specialty, @Crm);";
 
-            _dbContext.Connection.Execute(sql: query, param: entitie);
+            _dbContext.Connection.Execute(sql: query, param: entity);
 
             return Task.CompletedTask;
         }
 
-        public Task Delete(DoctorDto entitie)
+        public Task Delete(DoctorEntity entity)
         {
-            string query = @"DELETE FROM public.doctor
-            	WHERE id = @Id;";
+            const string query = @"DELETE FROM public.doctor WHERE id = @Id;";
 
-            _dbContext.Connection.Execute(sql: query, param: entitie);
+            _dbContext.Connection.Execute(sql: query, param: entity);
 
             return Task.CompletedTask;
         }
 
-        public async Task<DoctorDto?> Get(Guid idEntitie)
+        public async Task<DoctorEntity?> Get(Guid entityId)
         {
-            string query = @"SELECT id, name, email, specialty, crm
-	            FROM public.doctor
+            const string query = @"
+                SELECT id, name, email, specialty, crm
+                FROM public.doctor
                 WHERE id = @Id;";
 
-            var result = await _dbContext.Connection.QueryFirstOrDefaultAsync<DoctorDto>(query, new { Id = idEntitie });
+            var result = await _dbContext.Connection.QueryFirstOrDefaultAsync<DoctorEntity>(query, new { Id = entityId });
 
             return result;
         }
 
-        public async Task<List<DoctorDto>> GetAll()
+        public async Task<List<DoctorEntity>> GetAll()
         {
-            string query = @"SELECT id, name, email, specialty, crm
-	            FROM public.doctor;";
+            const string query = @"SELECT id, name, email, specialty, crm FROM public.doctor;";
 
-            var result = await _dbContext.Connection.QueryAsync<DoctorDto>(query);
+            var result = await _dbContext.Connection.QueryAsync<DoctorEntity>(query);
 
             return result.ToList();
         }
 
-        public Task Update(DoctorDto entitie)
+        public Task Update(DoctorEntity entity)
         {
-            string query = @"UPDATE public.doctor
-	            SET id=@Id, name=@Name, email=@Email, specialty=@Specialty, crm=@Crm
-	            WHERE id = @Id;";
+            const string query = @"
+                UPDATE public.doctor
+                SET name = @Name,
+                    email = @Email,
+                    specialty = @Specialty,
+                    crm = @Crm
+                WHERE id = @Id;";
 
-            _dbContext.Connection.Execute(sql: query, param: entitie);
+            _dbContext.Connection.Execute(sql: query, param: entity);
 
             return Task.CompletedTask;
         }

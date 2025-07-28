@@ -1,6 +1,8 @@
-﻿namespace Infrastructure.Repositories
+﻿using Domain.Entities;
+
+namespace Infrastructure.Repositories
 {
-    public class AppointmentRepository : IRepository<AppointmentDto>
+    public class AppointmentRepository : IRepository<AppointmentEntity>
     {
         private readonly AppDbContext _dbContext;
 
@@ -9,55 +11,65 @@
             _dbContext = appDbContext;
         }
 
-        public Task Add(AppointmentDto entitie)
+        public Task Add(AppointmentEntity entity)
         {
-            string query = @"INSERT INTO public.appointment(
-                id, title, datetime, status, Doctorid, Patientid, createddate)
-                VALUES (@Id, @Title, @DateTime, @Status, @DoctorEntityId, @PatientEntityId, @CreatedDate);";
+            const string query = @"
+                INSERT INTO public.appointment(
+                    id, title, datetime, status, doctorid, patientid, createddate)
+                VALUES (
+                    @Id, @Title, @DateTime, @Status, @DoctorId, @PatientId, @CreatedDate);";
 
-            _dbContext.Connection.Execute(sql: query, param: entitie);
+            _dbContext.Connection.Execute(sql: query, param: entity);
 
             return Task.CompletedTask;
         }
 
-        public Task Delete(AppointmentDto entitie)
+        public Task Delete(AppointmentEntity entity)
         {
-            string query = @"DELETE FROM public.appointment
-	            WHERE id = @Id;";
+            const string query = @"DELETE FROM public.appointment WHERE id = @Id;";
 
-            _dbContext.Connection.Execute(sql: query, param: entitie);
+            _dbContext.Connection.Execute(sql: query, param: entity);
 
             return Task.CompletedTask;
         }
 
-        public async Task<AppointmentDto?> Get(Guid idEntitie)
+        public async Task<AppointmentEntity?> Get(Guid entityId)
         {
-            string query = @"SELECT id, title, datetime, status, doctorid, patientid, createddate
-                     FROM public.appointment
-                     WHERE id = @Id;";
+            const string query = @"
+                SELECT id, title, datetime, status, doctorid, patientid, createddate
+                FROM public.appointment
+                WHERE id = @Id;";
 
-            var result = await _dbContext.Connection.QueryFirstOrDefaultAsync<AppointmentDto>(query, new { Id = idEntitie });
+            var result = await _dbContext.Connection.QueryFirstOrDefaultAsync<AppointmentEntity>(
+                query, new { Id = entityId });
 
             return result;
         }
 
-        public async Task<List<AppointmentDto>> GetAll()
+        public async Task<List<AppointmentEntity>> GetAll()
         {
-            string query = @"SELECT id, title, datetime, status, doctorid, patientid, createddate
-                     FROM public.appointment;";
+            const string query = @"
+                SELECT id, title, datetime, status, doctorid, patientid, createddate
+                FROM public.appointment;";
 
-            var result = await _dbContext.Connection.QueryAsync<AppointmentDto>(query);
+            var result = await _dbContext.Connection.QueryAsync<AppointmentEntity>(query);
 
             return result.ToList();
         }
 
-        public Task Update(AppointmentDto entitie)
+        public Task Update(AppointmentEntity entity)
         {
-            string query = @"UPDATE public.appointment
-	            SET id=@Id, title=@Title, datetime=@DateTime, status=@Status, doctorid=@DoctorId, PatientEntityid=@PatientId, createddate=@CreatedDate
-	            WHERE id = @Id;";
+            const string query = @"
+                UPDATE public.appointment
+                SET title = @Title,
+                    datetime = @DateTime,
+                    status = @Status,
+                    doctorid = @DoctorId,
+                    patientid = @PatientId,
+                    createddate = @CreatedDate
+                WHERE id = @Id;";
 
-            _dbContext.Connection.Execute(sql: query, param: entitie);
+            _dbContext.Connection.Execute(sql: query, param: entity);
 
             return Task.CompletedTask;
         }

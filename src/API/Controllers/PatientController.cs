@@ -1,14 +1,23 @@
-﻿namespace API.Controllers
+﻿using MedLink.Application.DTOs;
+
+using Domain.Entities;
+using MedLink.Domain.Interfaces.Repositories;
+using Microsoft.AspNetCore.Mvc;
+using AutoMapper;
+
+namespace API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
     public class PatientController : ControllerBase
     {
         private readonly IRepository<PatientEntity> _repository;
+        private readonly IMapper _mapper;  
 
-        public PatientController(IRepository<PatientEntity> repository)
+        public PatientController(IRepository<PatientEntity> repository, IMapper mapper)
         {
             _repository = repository;
+            _mapper = mapper;
         }
 
         [HttpGet("Get")]
@@ -16,7 +25,7 @@
         [ProducesResponseType(400)]
         [ProducesResponseType(500)]
         [ProducesResponseType(503)]
-        public async Task<ActionResult<PatientEntity>> GetPatientById([FromHeader] Guid id)
+        public async Task<ActionResult<ResponseEntity<PatientEntity>>> GetPatientById([FromHeader] Guid id)
         {
             var response = await _repository.Get(id);
 
@@ -27,18 +36,16 @@
         }
 
         [HttpGet("GetAll")]
-        [ProducesResponseType(typeof(PatientEntity), 200)]
+        [ProducesResponseType(typeof(List<PatientEntity>), 200)]
         [ProducesResponseType(400)]
         [ProducesResponseType(500)]
         [ProducesResponseType(503)]
-        public async Task<ActionResult<List<PatientEntity>>> GetAllPatient()
+        public async Task<ActionResult<ResponseEntity<List<PatientEntity>>>> GetAllPatient()
         {
             var response = await _repository.GetAll();
 
             if (response == null)
-            {
                 return NotFound();
-            }
 
             return Ok(response);
         }
@@ -48,21 +55,24 @@
         [ProducesResponseType(400)]
         [ProducesResponseType(500)]
         [ProducesResponseType(503)]
-        public async Task<ActionResult<PatientEntity>> PostPatient(PatientEntity patient)
+        public async Task<ActionResult<ResponseEntity<PatientEntity>>> PostPatient([FromBody] PatientDto patientDto)
         {
-            _repository.Add(patient);
+            var patient = _mapper.Map<PatientEntity>(patientDto);
+            await _repository.Add(patient);
 
-            return Ok(patient);
+            return CreatedAtAction(nameof(GetPatientById), new { id = patient.Id }, patient);
         }
 
         [HttpDelete("Delete")]
-        [ProducesResponseType(typeof(PatientEntity), 200 )]
+        [ProducesResponseType(typeof(PatientEntity), 200)]
         [ProducesResponseType(400)]
         [ProducesResponseType(500)]
         [ProducesResponseType(503)]
-        public async Task<ActionResult<PatientEntity>> DeletePatient(PatientEntity patient)
+        public async Task<ActionResult<ResponseEntity<PatientEntity>>> DeletePatient([FromBody] PatientDto patientDto)
         {
-            _repository.Delete(patient);
+            var patient = _mapper.Map<PatientEntity>(patientDto);
+
+            await _repository.Delete(patient);
 
             return Ok(patient);
         }
@@ -72,9 +82,13 @@
         [ProducesResponseType(400)]
         [ProducesResponseType(500)]
         [ProducesResponseType(503)]
-        public async Task<ActionResult<PatientEntity>> PutPatient(PatientEntity patient)
+        public async Task<ActionResult<ResponseEntity<PatientEntity>>> PutPatient([FromBody] PatientDto patientDto)
         {
-            throw new NotImplementedException();
+            var patient = _mapper.Map<PatientEntity>(patientDto);
+
+            await _repository.Update(patient);
+
+            return Ok(patient);
         }
     }
 }
