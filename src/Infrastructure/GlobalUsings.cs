@@ -1,3 +1,14 @@
 ﻿global using Dapper;
 global using MedLink.Domain.Interfaces.Repositories;
 global using MedLink.Application.DTOs;
+global using Application.Services;
+global using Application.UseCases;
+global using Domain.Entities;
+global using Domain.Interfaces.IServices;
+global using Domain.Interfaces.IUseCases;
+global using Domain.Interfaces.Services;
+global using Infrastructure.Repositories;
+global using MedLink.Application.Mappers;
+global using MedLink.Application.Services;
+global using MedLink.Infrastructure.Repositories;
+global using Microsoft.Extensions.DependencyInjection;
