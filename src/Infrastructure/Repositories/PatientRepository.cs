@@ -1,6 +1,4 @@
-﻿using Domain.Entities;
-
-namespace MedLink.Infrastructure.Repositories
+﻿namespace MedLink.Infrastructure.Repositories
 {
     public class PatientRepository : IRepository<PatientEntity>
     {
