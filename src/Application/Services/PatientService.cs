@@ -1,5 +1,4 @@
 ﻿using MedLink.Domain.Interfaces.Repositories;
-using Microsoft.Extensions.Logging;
 
 namespace Application.Services
 {
@@ -100,6 +99,9 @@ namespace Application.Services
 
             try
             {
+                if (patient.Id == Guid.Empty)
+                    patient.Id = Guid.NewGuid();
+
                 await _repository.Add(patient);
 
                 data.Message = "Patient created successfully.";
