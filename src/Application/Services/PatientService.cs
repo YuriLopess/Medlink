@@ -68,7 +68,7 @@ namespace Application.Services
         public async Task<ResponseEntity<PatientEntity>> GetPatientById(Guid id)
         {
             var data = new ResponseEntity<PatientEntity>();
-
+            
             try
             {
                 var responseData = await _repository.Get(id);
