@@ -2,7 +2,7 @@
 {
     public class AppointmentEntity
     {
-        public Guid Id { get; init; }
+        public Guid Id { get; set; }
         public string? Title { get; set; }
         public DateTime DateTime { get; set; }
         public Status Status { get; set; }
